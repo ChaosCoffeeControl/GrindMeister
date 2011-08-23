@@ -1,3 +1,4 @@
 
 This code uses 
  - Peter Fleury's uart library
+ - Peter Fleury's lcd library
