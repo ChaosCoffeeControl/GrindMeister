@@ -57,7 +57,7 @@ TARGET = main
 
 
 # List C source files here. (C dependencies are automatically generated.)
-SRC = $(TARGET).c uart.c encoder.c
+SRC = $(TARGET).c uart.c encoder.c lcd.c
 
 
 # List Assembler source files here.
@@ -368,7 +368,6 @@ program: $(TARGET).hex $(TARGET).eep
 # Set fuses for Pollin board.
 fuses: 
 	$(AVRDUDE) $(AVRDUDE_FLAGS) -U lfuse:w:0xDF:m -U hfuse:w:0xDB:m -U efuse:w:0x07:m
-
 
 # Generate avr-gdb config/init file which does the following:
 #     define the reset signal, load the target file, connect to target, and set 

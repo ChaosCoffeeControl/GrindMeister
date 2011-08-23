@@ -31,6 +31,7 @@
 
 #include "uart.h"
 #include "encoder.h"
+#include "lcd.h"
 
 /* 9600 baud */
 #define UART_BAUD_RATE      9600      
@@ -49,14 +50,39 @@ int main(void) {
 
   uart_puts_P("GrinderTimer is booting.\n\r");
 
+  /* initialize display, cursor off */
+  lcd_init(LCD_DISP_ON);
+  //lcd_init(LCD_DISP_ON_CURSOR_BLINK);
+
+  uart_puts_P("1.\n\r");
+  /* 
+   * Test 1:  write text to display
+   */
+
+  /* clear display and home cursor */
+  lcd_clrscr();
+
+  /* put string to display (line 1) with linefeed */
+  lcd_puts("LCD Test Line 1\n");
+  uart_puts_P("2.\n\r");
+
+  /* cursor is now on second line, write second line */
+  lcd_puts("Value: ");
+
+  uart_puts_P("3.\n\r");
+
   int32_t oldval=val;
   for(;;) {
-    val = encode_read();
-    if (val != oldval) {
-      itoa( val, buffer, 10);   // convert interger into string (decimal format)         
-      uart_puts(buffer);        // and transmit string to UART
-      uart_puts_P("\n\r");
-      oldval=val;
-    }
+	val = encode_read();
+	if (val != oldval) {
+	  itoa( val, buffer, 10);   // convert interger into string (decimal format)         
+	  uart_puts(buffer);        // and transmit string to UART
+	  uart_puts_P("\n\r");
+	  lcd_gotoxy(7,1);
+	  lcd_puts("      ");
+	  lcd_gotoxy(7,1);
+	  lcd_puts(buffer);
+	  oldval=val;
+	}
   }
 }
