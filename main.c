@@ -1,14 +1,22 @@
-/*************************************************************************
-Title:    example program for the Interrupt controlled UART library
-Author:   Peter Fleury <pfleury@gmx.ch>   http://jump.to/fleury
-File:     $Id: test_uart.c,v 1.4 2005/07/10 11:46:30 Peter Exp $
-Software: AVR-GCC 3.3
-Hardware: any AVR with built-in UART, tested on AT90S8515 at 4 Mhz
-
-DESCRIPTION:
-          This example shows how to use the UART library uart.c
-
-*************************************************************************/
+/**
+ * This file is part of GrinderTimer.
+ *
+ * (c) Mathias Dalheimer <md@gonium.net>, 2011
+ *
+ * GrinderTimer is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * GrinderTimer is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with GrinderTimer. If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 
 /* define CPU frequency in Mhz here if not defined in Makefile */
 #ifndef F_CPU
@@ -24,78 +32,31 @@ DESCRIPTION:
 #include "uart.h"
 #include "encoder.h"
 
-
-
 /* 9600 baud */
 #define UART_BAUD_RATE      9600      
 
+int main(void) {
+  unsigned int c;
+  char buffer[7];
+  int  num=134;
 
-int main(void)
-{
-    unsigned int c;
-    char buffer[7];
-    int  num=134;
+  int32_t val=0;
+  encode_init();
 
-    int32_t val=0;
-    encode_init();
-    
-    /*
-     *  Initialize UART library, pass baudrate and AVR cpu clock
-     *  with the macro 
-     *  UART_BAUD_SELECT() (normal speed mode )
-     *  or 
-     *  UART_BAUD_SELECT_DOUBLE_SPEED() ( double speed mode)
-     */
-    uart_init( UART_BAUD_SELECT(UART_BAUD_RATE,F_CPU) ); 
-    
-    /*
-     * now enable interrupt, since UART library is interrupt controlled
-     */
-    sei();
-    
-    /*
-     *  Transmit string to UART
-     *  The string is buffered by the uart library in a circular buffer
-     *  and one character at a time is transmitted to the UART using interrupts.
-     *  uart_puts() blocks if it can not write the whole string to the circular 
-     *  buffer
-     */
-    uart_puts("String stored in SRAM\n\r");
-    
-    /*
-     * Transmit string from program memory to UART
-     */
-    uart_puts_P("String stored in FLASH\n\r");
-    
-        
-    /* 
-     * Use standard avr-libc functions to convert numbers into string
-     * before transmitting via UART
-     */     
-    itoa( num, buffer, 10);   // convert interger into string (decimal format)         
-    uart_puts(buffer);        // and transmit string to UART
+  uart_init( UART_BAUD_SELECT(UART_BAUD_RATE,F_CPU) ); 
 
-    
-    /*
-     * Transmit single character to UART
-     */
-    uart_puts("\n\r");
-    
+  sei();
 
-    
-    int32_t oldval=val;
-    for(;;) {
-      val += encode_read1();
-      if (val != oldval) {
-        itoa( val, buffer, 10);   // convert interger into string (decimal format)         
-        uart_puts(buffer);        // and transmit string to UART
-        uart_puts_P("\n\r");
-        oldval=val;
-      }
+  uart_puts_P("GrinderTimer is booting.\n\r");
 
-      //_delay_ms(200);
-
+  int32_t oldval=val;
+  for(;;) {
+    val = encode_read();
+    if (val != oldval) {
+      itoa( val, buffer, 10);   // convert interger into string (decimal format)         
+      uart_puts(buffer);        // and transmit string to UART
+      uart_puts_P("\n\r");
+      oldval=val;
     }
-
-
+  }
 }

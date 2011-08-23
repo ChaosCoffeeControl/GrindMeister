@@ -1,3 +1,3 @@
-http://www.mikrocontroller.net/articles/Drehgeber#Beispielcode_in_C
-http://www.arduino.cc/playground/Main/RotaryEncoders
-http://www.tufts.edu/programs/mma/emid/RotaryEncoder.pdf
+
+This code uses 
+ - Peter Fleury's uart library
