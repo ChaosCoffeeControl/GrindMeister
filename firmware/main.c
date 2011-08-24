@@ -1,20 +1,20 @@
 /**
- * This file is part of GrinderTimer.
+ * This file is part of GrindMeister.
  *
  * (c) Mathias Dalheimer <md@gonium.net>, 2011
  *
- * GrinderTimer is free software: you can redistribute it and/or modify
+ * GrindMeister is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  * 
- * GrinderTimer is distributed in the hope that it will be useful,
+ * GrindMeister is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with GrinderTimer. If not, see <http://www.gnu.org/licenses/>.
+ * along with GrindMeister. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -32,6 +32,7 @@
 #include "uart.h"
 #include "encoder.h"
 #include "lcd.h"
+#include "menu.h"
 
 /* 9600 baud */
 #define UART_BAUD_RATE      9600      
@@ -48,7 +49,7 @@ int main(void) {
 
   sei();
 
-  uart_puts_P("GrinderTimer is booting.\n\r");
+  uart_puts_P("GrindMeister is booting.\n\r");
 
   /* initialize display, cursor off */
   lcd_init(LCD_DISP_ON);
@@ -71,18 +72,20 @@ int main(void) {
 
   uart_puts_P("3.\n\r");
 
+  loop_menu();
+
   int32_t oldval=val;
   for(;;) {
-	val = encode_read();
-	if (val != oldval) {
-	  itoa( val, buffer, 10);   // convert interger into string (decimal format)         
-	  uart_puts(buffer);        // and transmit string to UART
-	  uart_puts_P("\n\r");
-	  lcd_gotoxy(7,1);
-	  lcd_puts("      ");
-	  lcd_gotoxy(7,1);
-	  lcd_puts(buffer);
-	  oldval=val;
-	}
+    val = encode_read();
+    if (val != oldval) {
+      itoa( val, buffer, 10);   // convert interger into string (decimal format)         
+      uart_puts(buffer);        // and transmit string to UART
+      uart_puts_P("\n\r");
+      lcd_gotoxy(7,1);
+      lcd_puts("        ");
+      lcd_gotoxy(7,1);
+      lcd_puts(buffer);
+      oldval=val;
+    }
   }
 }

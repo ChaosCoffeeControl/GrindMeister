@@ -1,25 +1,26 @@
 /**
- * This file is part of GrinderTimer.
+ * This file is part of GrindMeister.
  *
  * (c) Mathias Dalheimer <md@gonium.net>, 2011
  *
- * GrinderTimer is free software: you can redistribute it and/or modify
+ * GrindMeister is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  * 
- * GrinderTimer is distributed in the hope that it will be useful,
+ * GrindMeister is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with GrinderTimer. If not, see <http://www.gnu.org/licenses/>.
+ * along with GrindMeister. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
+#include <util/delay.h>
 #include "encoder.h"
  
 #ifndef F_CPU
@@ -41,12 +42,16 @@ void encode_init( void )
   PORTD &= ~(1 << PD7);
 
   EIMSK |= _BV(INT0);  //Enable INT0
-  EICRA |= _BV(ISC01); //Trigger on falling edge of INT0
+  /*
+   * Trigger on rising edge of INT0. This seems to work more stable
+   * than the falling edge. More science needed.
+   */
+  EICRA |= (1 << ISC01) | (1 << ISC00); 
+
 
   enc_delta=0;
   value=0;
 }
-
 
 ISR( SIG_INTERRUPT0 ) {
   if (A_VALUE > 0) {     // found a low-to-high on channel A
@@ -64,9 +69,7 @@ ISR( SIG_INTERRUPT0 ) {
   }
 }
 
-
-int32_t encode_read( void )         // read single step encoders
-{
+int32_t encode_read( void ) {
   uint8_t tmp_sreg;  // temporaerer Speicher fuer das Statusregister
 
   tmp_sreg = SREG;   // Statusregister (also auch das I-Flag darin) sichern

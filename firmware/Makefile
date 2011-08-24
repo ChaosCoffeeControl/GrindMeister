@@ -57,7 +57,7 @@ TARGET = main
 
 
 # List C source files here. (C dependencies are automatically generated.)
-SRC = $(TARGET).c uart.c encoder.c lcd.c
+SRC = $(TARGET).c uart.c encoder.c lcd.c menu.c
 
 
 # List Assembler source files here.

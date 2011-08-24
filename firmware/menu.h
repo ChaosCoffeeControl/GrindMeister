@@ -17,11 +17,11 @@
  * along with GrindMeister. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-#ifndef ENCODER_H
-#define ENCODER_H 1
+#ifndef MENU_H
+#define MENU_H 1
 
-void encode_init( void );
-int32_t encode_read( void );
 
-#endif /* ENCODER_H */
+void loop_menu( void );
+
+#endif /* MENU_H */
 
