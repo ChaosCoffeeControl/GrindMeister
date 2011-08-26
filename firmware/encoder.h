@@ -20,8 +20,11 @@
 #ifndef ENCODER_H
 #define ENCODER_H 1
 
+#include <stdbool.h> // C99
+
 void encode_init( void );
 int32_t encode_read( void );
+bool is_encoder_pressed( void );
 
 #endif /* ENCODER_H */
 

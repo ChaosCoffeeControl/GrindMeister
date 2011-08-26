@@ -21,6 +21,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <util/delay.h>
+#include "debounce.h"
 #include "encoder.h"
  
 #ifndef F_CPU
@@ -35,19 +36,22 @@ static int32_t value;
  
 void encode_init( void )
 {
- 
+  // Encoder A and B 
   DDRD &= ~(1 << PD2);
   PORTD &= ~(1 << PD2);
   DDRD &= ~(1 << PD7);
   PORTD &= ~(1 << PD7);
+  // Encoder Pushbutton - 10k Pullup, Active High
+  DDRD &= ~(1 << PD4);
+  PORTD &= ~(1 << PD4);
+  //PORTD |=   1<<PD4;
 
-  EIMSK |= _BV(INT0);  //Enable INT0
   /*
    * Trigger on rising edge of INT0. This seems to work more stable
    * than the falling edge. More science needed.
    */
+  EIMSK |= _BV(INT0);  //Enable INT0
   EICRA |= (1 << ISC01) | (1 << ISC00); 
-
 
   enc_delta=0;
   value=0;
@@ -66,6 +70,14 @@ ISR( SIG_INTERRUPT0 ) {
     } else {
       enc_delta-=1;
     }
+  }
+}
+
+bool is_encoder_pressed() {
+  if (debounce(PIND, PD4)) {
+    return true;
+  } else {
+    return false;
   }
 }
 

@@ -72,20 +72,23 @@ int main(void) {
 
   uart_puts_P("3.\n\r");
 
-  loop_menu();
+  //loop_menu();
 
   int32_t oldval=val;
   for(;;) {
-    val = encode_read();
-    if (val != oldval) {
-      itoa( val, buffer, 10);   // convert interger into string (decimal format)         
-      uart_puts(buffer);        // and transmit string to UART
-      uart_puts_P("\n\r");
-      lcd_gotoxy(7,1);
-      lcd_puts("        ");
-      lcd_gotoxy(7,1);
-      lcd_puts(buffer);
-      oldval=val;
-    }
+   if (is_encoder_pressed()) {
+      uart_puts_P("PRESSED!\n\r");
+   }
+   val = encode_read();
+   if (val != oldval) {
+     itoa( val, buffer, 10);   // convert interger into string (decimal format)         
+     uart_puts(buffer);        // and transmit string to UART
+     uart_puts_P("\n\r");
+     lcd_gotoxy(7,1);
+     lcd_puts("        ");
+     lcd_gotoxy(7,1);
+     lcd_puts(buffer);
+     oldval=val;
+   }
   }
 }
