@@ -1,6 +1,19 @@
 #ifndef DEBOUNCE_H
 #define DEBOUNCE_H 1
 
+/**
+ * https://www.mikrocontroller.net/articles/Entprellung#Warteschleifen-Verfahren
+Wenn das Makro für die gleiche Taste (Pin) an mehreren Stellen aufgerufen werden soll, muss eine Funktion angelegt werden, damit beide Aufrufe an die gleiche Zustandsvariable flag auswerten [1]:
+
+// Hilfsfunktion
+uint8_t debounce_C1( void )
+{
+  return debounce(PINC, PC1);
+}
+ 
+ * 
+ */
+
 /************************************************************************/
 /*                                                                      */
 /*                      Not so powerful Debouncing Example              */
@@ -9,7 +22,6 @@
 /*              Author: Peter Dannegger                                 */
 /*                                                                      */
 /************************************************************************/
-// Target: ATtiny13
  
 #include <avr/io.h>
 #include <util/delay.h>
