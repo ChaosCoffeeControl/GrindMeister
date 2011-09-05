@@ -41,10 +41,9 @@ void encode_init( void )
   PORTD &= ~(1 << PD2);
   DDRD &= ~(1 << PD7);
   PORTD &= ~(1 << PD7);
-  // Encoder Pushbutton - 10k Pullup, Active High
+  // Encoder Pushbutton - 10k Pullup, Active LoW
   DDRD &= ~(1 << PD4);
-  PORTD &= ~(1 << PD4);
-  //PORTD |=   1<<PD4;
+  PORTD |= (1<<PD4);
 
   /*
    * Trigger on rising edge of INT0. This seems to work more stable

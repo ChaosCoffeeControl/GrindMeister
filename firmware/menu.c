@@ -26,14 +26,15 @@
 typedef void (*MenuFnct) (int);
  
 struct MenuEntry {
-  char     Text[20];
+  char     TextLine1[17];
+  char     TextLine2[17];
   MenuFnct Function;
   int      ArgumentToFunction;
 };
 
-void HandleEdit (int arg) {
+void GrindSingle (int arg) {
   lcd_clrscr();
-  lcd_puts("LCD Edit\n");
+  lcd_puts("\n");
 }
  
 void HandleCopy (int arg) {
@@ -49,9 +50,9 @@ void HandlePaste (int arg) {
 struct MenuEntry MainMenu[] =
 {
    // Der Funktion HandleEdit soll beim Aufruf 23 mitgegeben werden
-   { "Edit",  HandleEdit,  23 },
-   { "Copy",  HandleCopy,   0 },
-   { "Paste", HandlePaste,  0 }
+   { "Single", "foo",  GrindSingle,  23 },
+   { "Copy", "foo",  HandleCopy,   0 },
+   { "Paste", "foo", HandlePaste,  0 }
 };
 
 #define ARRAY_SIZE(X) (sizeof(X) / sizeof(*(X)))
